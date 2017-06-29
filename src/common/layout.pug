@@ -1,0 +1,17 @@
+// mixin
+mixin loadJs(fileName)
+    script(src= fileName + '.bundle.' + (bundleKey ? bundleKey + '.' : '') + 'js')
+
+html
+    head
+        title My Site - #{title}
+        meta(charset='UTF-8')
+        meta(name='keywords', content=keywords)
+        meta(name='description', content=description)
+        script(src='lodash.min.js')
+        block scripts
+    body
+        block content
+        block foot
+            #footer
+                p some footer content
