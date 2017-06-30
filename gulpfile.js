@@ -6,6 +6,7 @@ const babel = require('gulp-babel')
 const uglify = require('gulp-uglify')
 const rename = require('gulp-rename')
 const htmlmin = require('gulp-htmlmin')
+const stylus = require('gulp-stylus')
 
 // 浏览器模块化支持
 const babelify = require('babelify')
@@ -18,10 +19,10 @@ const es = require('event-stream')
 const del = require('del')
 
 const entryBaseDir = 'src/js/entry/'
-let bundleKey
+let bundleKey = ''
 
 gulp.task('pug', () => {
-    gulp.src('src/*.pug')
+    gulp.src(['src/**/*.pug', '!src/layout/*.pug'])
         .pipe(pug({
             pretty: true,
             verbose: true,
@@ -58,6 +59,16 @@ gulp.task('script', () => { // 支持多个entry
     })
 })
 
+gulp.task('stylus', () => {
+    return gulp.src('src/style/style.styl')
+        .pipe(stylus({
+            compress: true
+        }))
+        .pipe(rename({ extname: '.' + (bundleKey ? bundleKey + '.' : '') + 'css' }))
+        .pipe(gulp.dest('dist'))
+        .pipe(connect.reload())
+});
+
 gulp.task('serve', () => {
     connect.server({
         name: 'Pug Demo Server',
@@ -77,11 +88,12 @@ gulp.task('clean', () => {
 gulp.task('watch', () => {
     gulp.watch('src/**/*.pug', ['pug'])
     gulp.watch('src/js/**/*.js', ['script'])
+    gulp.watch('src/style/**/*.styl', ['stylus'])
 })
 
 gulp.task('bundleKey', () => {
     bundleKey = new Date().getTime()
 })
 
-gulp.task('dist', ['clean', 'bundleKey', 'script', 'pug', 'serve'])
-gulp.task('default', ['watch', 'serve', 'script', 'pug'])
+gulp.task('build', ['clean', 'bundleKey', 'script', 'pug', 'serve', 'stylus'])
+gulp.task('default', ['watch', 'serve', 'script', 'pug', 'stylus'])

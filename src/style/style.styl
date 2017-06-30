@@ -1,0 +1,193 @@
+@import "partials/var"
+@import "partials/reset"
+
+$directions = {t: top, r: right, b: bottom, l: left, v: top bottom, h: left right}
+
+/****************************
+*        字体大小            *
+* **************************/
+for size in range(10, 30, 2)
+    .fz-{size}
+        font-size: size px
+
+/****************************
+*   文字颜色，背景色，边框    *
+* **************************/
+for $clazz, $color in $colors
+	.{$clazz}
+		if match('bg', $clazz)
+			background-color: $color
+		else if match('bd', $clazz)
+			border: 1px solid $color
+		else
+			color: $color
+
+for $d, $dirs in $directions
+    .bd{$d}
+        for $dir in $dirs
+            border-{$dir}: 1px solid $colors.bd
+
+/****************************
+*        常用间距            *
+* **************************/
+gap($size)
+    if $size
+        $suffix = - $size
+    else
+        $size = 12
+        $suffix = ''
+
+    .mg{$suffix}
+        margin: $size px
+    .pd{$suffix}
+        padding: $size px
+    for $d, $dirs in $directions
+        .mg{$d}{$suffix}
+            for $dir in $dirs
+                margin-{$dir}: $size px
+        .pd{$d}{$suffix}
+            for $dir in $dirs
+                padding-{$dir}: $size px
+for $size in range(6, 50, 2)
+    gap($size)
+gap(0)
+/****************************
+*           position        *
+* **************************/
+for $pos in relative absolute fixed
+    .{$pos}
+        position: $pos
+
+/****************************
+*          display          *
+* **************************/
+for $dis in block inline-block none
+    .{$dis}
+        display: $dis
+
+.flex
+    display: flex
+    align-items: center
+for $i in 1..3
+    .flex-{$i}
+        flex: $i
+
+/****************************
+*          align            *
+* **************************/
+.center, .txt-center
+    text-align: center
+.txt-left
+    text-align: left
+.txt-right
+    text-align: right
+.center-h
+    position: relative
+    left: 50%
+    transform: translate3d(-50%, 0, 0)
+.center-v
+    position: relative
+    top: 50%
+    transform: translate3d(0, -50%, 0)
+.center-a
+    position: relative
+    top: 50%
+    left: 50%
+    transform: translate3d(-50%, -50%, 0)
+
+/****************************
+*           常用组件         *
+* **************************/
+.scrollable
+    -webkit-overflow-scrolling: touch
+    overflow-x: auto
+    white-space: nowrap
+    font-size: 0
+    > *
+        display: inline-block
+
+$line-clamp
+    overflow: hidden
+    word-break: break-all
+    text-overflow: ellipsis
+    line-height: 1.2
+.line-clamp, .line-clamp-1
+    @extends $line-clamp
+    -webkit-line-clamp: 1
+    white-space: nowrap
+.line-clamp-2
+    @extends $line-clamp
+    display: -webkit-box
+    -webkit-box-orient: vertical
+    -webkit-line-clamp: 2
+.line-clamp-4
+    @extends $line-clamp
+    display: -webkit-box
+    -webkit-box-orient: vertical
+    -webkit-line-clamp: 4
+
+.input
+    word-break: break-all
+    line-height: 1.5
+    img
+        height: 22px
+        vertical-align: bottom
+
+.hr
+    height: 20px
+    background-color: $colors.bg
+
+.round
+    border-radius: 50%
+.bold
+    font-weight: bold
+
+.video
+    position: relative
+    min-width: 100px
+    min-height: 56px
+    background-size: contain
+    background-color: black
+    &::before
+        content: ''
+        position: absolute
+        left: 0
+        top: 0
+        right: 0
+        bottom: 0
+        background: transparent url('//o0x80w5li.qnssl.com/icon/play.svg') no-repeat 50%
+        background-size: 60px
+        transition: background-size .3s ease-in-out
+    &:hover::before
+        background-size: 80px
+.clickable
+    cursor: pointer
+    // &:not(.bg-disable):not(.bg-red):hover
+    //     color: #CC3F4F
+
+.backdrop
+    position: fixed
+    z-index: 999
+    top: 0
+    right: 0
+    bottom: 0
+    left: 0
+.clearfix
+    content: ''
+    display: table
+    clear: both
+@keyframes spin
+    from
+        transform: rotate(0deg) translate3d(0, -50%, 0)
+    to
+        transform: rotate(360deg) translate3d(0, -50%, 0)
+@keyframes pop-bg-enter
+    from { opacity: 0 }
+    to { opacity: 1 }
+@keyframes pop-content-enter
+    from { transform: translate3d(0, -20px, 0) }
+    to { transform: translate3d(0, 0, 0) }
+.popup-enter
+    animation: 0.3s pop-bg-enter ease-out
+    .container
+        animation: 0.3s pop-content-enter ease-out

@@ -3,3 +3,6 @@
  */
 export const a = 1
 export const b = 13
+export const c = 13
+export const d = 13
+export const e = 13
