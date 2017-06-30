@@ -22,7 +22,7 @@ const entryBaseDir = 'src/js/entry/'
 let bundleKey = ''
 
 gulp.task('pug', () => {
-    gulp.src(['src/**/*.pug', '!src/layout/*.pug'])
+    gulp.src(['src/**/*.pug', '!src/common/*.pug'])
         .pipe(pug({
             pretty: true,
             verbose: true,
@@ -60,7 +60,7 @@ gulp.task('script', () => { // 支持多个entry
 })
 
 gulp.task('stylus', () => {
-    return gulp.src('src/style/style.styl')
+    return gulp.src('src/style/base.styl')
         .pipe(stylus({
             compress: true
         }))
