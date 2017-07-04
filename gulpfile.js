@@ -7,6 +7,10 @@ const uglify = require('gulp-uglify')
 const rename = require('gulp-rename')
 const htmlmin = require('gulp-htmlmin')
 const stylus = require('gulp-stylus')
+const image = require('gulp-image')
+const postcss = require('gulp-postcss')
+const autoprefixer = require('autoprefixer')
+const pxtorem = require('postcss-pxtorem')
 
 // 浏览器模块化支持
 const babelify = require('babelify')
@@ -60,20 +64,37 @@ gulp.task('script', () => { // 支持多个entry
 })
 
 gulp.task('stylus', () => {
-    return gulp.src('src/style/base.styl')
+    return gulp.src('src/style/*.styl')
         .pipe(stylus({
             compress: true
         }))
         .pipe(rename({ extname: '.' + (bundleKey ? bundleKey + '.' : '') + 'css' }))
+        .pipe(postcss([
+            autoprefixer({
+                browsers: 'last 1 version'
+            }),
+            pxtorem({
+                rootValue: 75,
+                unitPrecision: 1,
+                propList: ['*']
+            })
+        ]))
         .pipe(gulp.dest('dist'))
         .pipe(connect.reload())
-});
+})
+
+gulp.task('image', function () {
+    gulp.src('src/image/*')
+        .pipe(image())
+        .pipe(gulp.dest('dist/image'))
+})
 
 gulp.task('serve', () => {
     connect.server({
         name: 'Pug Demo Server',
         root: 'dist',
         port: 8080,
+        index: 'home.html',
         livereload: true
     })
 })
@@ -95,5 +116,5 @@ gulp.task('bundleKey', () => {
     bundleKey = new Date().getTime()
 })
 
-gulp.task('build', ['clean', 'bundleKey', 'script', 'pug', 'serve', 'stylus'])
-gulp.task('default', ['watch', 'serve', 'script', 'pug', 'stylus'])
+gulp.task('build', ['clean', 'bundleKey', 'script', 'pug', 'serve', 'stylus', 'image'])
+gulp.task('default', ['watch', 'serve', 'script', 'pug', 'stylus', 'image'])

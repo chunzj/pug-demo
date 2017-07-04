@@ -1,4 +1,7 @@
-//
-   Created by chunzj on 29/06/2017.
+extends ../common/layout.pug
 
-.about 这是一个about页面
+block styles
+    + loadCss('about')
+
+block content
+    .about-page 这是about页面

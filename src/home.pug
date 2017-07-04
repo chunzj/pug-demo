@@ -1,0 +1,14 @@
+extends common/layout.pug
+
+block styles
+    +loadCss('home')
+
+block content
+    - var menus = [{ path: '/', name: '首页' }, { path: '/pg/about.html', name: '媒体报道' }, { path: '/pg/about.html', name: '关于我们' }, { path: '/pg/about.html', name: '写文章' }]
+    .home-page
+        header
+            each val in menus
+                a.fz-26.gray-99.flex.clickable(href=val.path)=val.name
+
+block scripts
+    +loadJs('a')

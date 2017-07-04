@@ -2,19 +2,38 @@
 mixin loadJs(fileName)
     script(src= fileName + '.bundle.' + (bundleKey ? bundleKey + '.' : '') + 'js')
 mixin loadCss(fileName)
-    link(rel='stylesheet', href= fileName + '.' + (bundleKey ? bundleKey + '.' : '') + 'css')
+    link(rel='stylesheet', href= '/' + fileName + '.' + (bundleKey ? bundleKey + '.' : '') + 'css')
 
-html
+html(style='font-size: 75px; font-size: calc(75px + (100vw - 750px) / 10);')
     head
         title My Site - #{title}
         meta(charset='UTF-8')
+        meta(name='viewport', content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no')
         meta(name='keywords', content=keywords)
         meta(name='description', content=description)
+        link(rel='icon', href='//o0w8taeuo.qnssl.com/static/logo.png', type='image/x-icon')
+
         + loadCss('base')
         block styles
+
     body
         block content
-        block foot
-            #footer
-                p some footer content
+        block footer
         block scripts
+
+    script(type='text/javascript').
+        (function() {
+            var timer,
+                doc = window.document,
+                adjustBase = function() {
+                    doc.querySelector('html').style['font-size'] = Math.min(75, doc.body.clientWidth / 10) + 'px'
+                }
+            adjustBase()
+            window.onresize = function() {
+                if (timer) {
+                    clearTimeout(timer)
+                    timer = null
+                }
+                timer = setTimeout(adjustBase, 200)
+            }
+        })()
