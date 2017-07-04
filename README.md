@@ -9,3 +9,8 @@
 + 2、common为pug的公共文件。
 + 3、pg为项目中用到的页面。
 + 4、style为css放置的地方，其中base为所有的共用样式。
++ 5、image为图片路径
+## 如何运行项目
++ 1、git clone git@github.com:chunzj/pug-demo.git
++ 2、npm install
++ 3、开发调试: gulp/npm start; 发布: gulp build/npm run build
